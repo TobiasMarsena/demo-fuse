@@ -13,6 +13,9 @@
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet" port="8888"/>
         <rest id="rest-2c782f32-1b63-47b9-9fed-4a9982bb816a">
+            <get id="e550f79f-7a80-4654-bae1-abfcefacd046" uri="/welcome">
+                <to uri="direct:welcome"/>
+            </get>
             <get id="8556291a-a219-487d-81f5-f409569257c5" uri="/api/detail">
                 <to uri="direct:getDetail"/>
             </get>
@@ -23,6 +26,12 @@
                 <to uri="direct:getCustomerAndDetail"/>
             </get>
         </rest>
+        <route id="_route3">
+            <from id="_from6" uri="direct:welcome"/>
+            <setBody id="_setBody4">
+                <constant>hello</constant>
+            </setBody>
+        </route>
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
             <to id="_to1" uri="direct:customerDataFromCache"/>
@@ -42,12 +51,13 @@
                             beanType="org.mycompany.CustomerAggregator" method="createFullBody"/>
                     </setBody>
                     <to id="_to2" uri="direct:customerDataToCache"/>
+                    <log id="_log3" message="return aggregated from API: ${body}"/>
                 </when>
                 <otherwise id="_otherwise1">
                     <log id="_log2" message="Cache is not null: ${body}"/>
+                    <log id="_log7" message="Return data from cache: ${body}"/>
                 </otherwise>
             </choice>
-            <log id="_log3" message="return body: ${body}"/>
         </route>
         <route id="customer-data-to-cache">
             <from id="_from4" uri="direct:customerDataToCache"/>
