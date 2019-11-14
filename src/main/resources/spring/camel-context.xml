@@ -30,21 +30,46 @@
             <choice id="_choice1">
                 <when id="_when1">
                     <simple>${body} == null</simple>
-                    <log id="_log1" message="Cache is null"/>
+                    <log id="_log1" message="Cache is null. Populating cache . . ."/>
+                    <setHeader headerName="customer" id="_setHeader1">
+                        <method beanType="org.mycompany.Customer" method="setCustomerName"/>
+                    </setHeader>
+                    <setHeader headerName="detail" id="_setHeader3">
+                        <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
+                    </setHeader>
+                    <setBody id="_setBody1">
+                        <method
+                            beanType="org.mycompany.CustomerAggregator" method="createFullBody"/>
+                    </setBody>
+                    <to id="_to2" uri="direct:customerDataToCache"/>
                 </when>
                 <otherwise id="_otherwise1">
                     <log id="_log2" message="Cache is not null: ${body}"/>
                 </otherwise>
             </choice>
-            <setHeader headerName="customer" id="_setHeader1">
-                <method beanType="org.mycompany.Customer" method="setCustomerName"/>
+            <log id="_log3" message="return body: ${body}"/>
+        </route>
+        <route id="customer-data-to-cache">
+            <from id="_from4" uri="direct:customerDataToCache"/>
+            <marshal id="_marshal1">
+                <json library="Jackson"/>
+            </marshal>
+            <convertBodyTo id="_convertBodyTo1" type="java.lang.String"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader2">
+                <constant>CamelInfinispanOperationPut</constant>
             </setHeader>
-            <setHeader headerName="detail" id="_setHeader3">
-                <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
+            <setHeader headerName="CamelInfinispanValue" id="_setHeader6">
+                <simple>${body}</simple>
             </setHeader>
-            <setBody id="_setBody1">
-                <method beanType="org.mycompany.CustomerAggregator" method="createFullBody"/>
-            </setBody>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader7">
+                <constant>allCustomer</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader8">
+                <constant>10000</constant>
+            </setHeader>
+            <to id="_to3" uri="infinispan://{{jdg.url}}"/>
+            <unmarshal id="_unmarshal1" ref="custFull"/>
+            <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
         <route id="_route1">
             <from id="_from1" uri="direct:getCustomer"/>
@@ -66,7 +91,7 @@
             <setHeader headerName="CamelInfinispanKey" id="_setHeader5">
                 <constant>allCustomer</constant>
             </setHeader>
-            	<to id="_to8" uri="infinispan://{{jdg.url}}"/>
+            <to id="_to8" uri="infinispan://{{jdg.url}}"/>
             <setBody id="setResultBody">
                 <simple>${header.CamelInfinispanOperationResult}</simple>
             </setBody>
