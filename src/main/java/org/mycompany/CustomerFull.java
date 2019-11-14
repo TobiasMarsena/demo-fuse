@@ -5,6 +5,11 @@ public class CustomerFull {
 	private long id;
 	private String name;
 	private String description;
+	
+	
+	public CustomerFull() {
+		super();
+	}
 	public CustomerFull(String name, String description) {
 		super();
 		this.name = name;
