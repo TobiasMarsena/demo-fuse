@@ -32,7 +32,7 @@
 					<log message="Cache is null"/>					
 	            </when>
 	            <otherwise>
-	            	<log message="Cache is not null: ${body}"
+	            	<log message="Cache is not null: ${body}"/>
 	            </otherwise>
 			</choice>            
             <setHeader headerName="customer" id="_setHeader1">
