@@ -12,8 +12,7 @@
                 useDefaultObjectMapper="true" useList="false"/>
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet"
-            contextPath="demo-fuse-3scale-demo.apps.i3dc.com"
-            port="8080" scheme="http"/>
+            contextPath="/" port="8080" scheme="http"/>
         <rest id="rest-2c782f32-1b63-47b9-9fed-4a9982bb816a">
             <get id="e550f79f-7a80-4654-bae1-abfcefacd046" uri="/welcome">
                 <to uri="direct:welcome"/>
