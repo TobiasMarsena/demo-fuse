@@ -30,13 +30,13 @@
             </get>
         </rest>
         <!-- Home route -->
-<!--         <route id="home-route"> -->
-<!--             <from id="_from7" uri="direct:home"/> -->
-<!--             <setBody> -->
-<!--             	<constant>Home</constant> -->
-<!--             </setBody> -->
-<!--             <to id="_to4" uri="mock:home"/> -->
-<!--         </route> -->
+        <route id="home-route">
+            <from id="_from7" uri="direct:home"/>
+            <setBody>
+            	<constant>Home</constant>
+            </setBody>
+            <to id="_to4" uri="mock:home"/>
+        </route>
         <!-- Master route -->
         <route id="_route3">
             <from id="_from6" uri="direct:welcome"/>
