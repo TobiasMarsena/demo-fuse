@@ -10,11 +10,18 @@ public class CustomerFull {
 	public CustomerFull() {
 		super();
 	}
+	public CustomerFull(long id, String name, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
 	public CustomerFull(String name, String description) {
 		super();
 		this.name = name;
 		this.description = description;
 	}
+	
 	public long getId() {
 		return id;
 	}
