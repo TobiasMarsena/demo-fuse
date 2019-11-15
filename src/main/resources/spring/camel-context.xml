@@ -11,11 +11,8 @@
                 unmarshalTypeName="org.mycompany.CustomerFull"
                 useDefaultObjectMapper="true" useList="false"/>
         </dataFormats>
-        <restConfiguration bindingMode="json" component="restlet" port="8080"/>
+        <restConfiguration bindingMode="json" component="restlet" port="443"/>
         <rest id="rest-2c782f32-1b63-47b9-9fed-4a9982bb816a">
-            <get id="5ae1ad52-1efe-4c14-97a3-86731dccb48d" uri="/">
-                <to uri="direct:home"/>
-            </get>
             <get id="e550f79f-7a80-4654-bae1-abfcefacd046" uri="/welcome">
                 <to uri="direct:welcome"/>
             </get>
@@ -28,12 +25,15 @@
             <get id="17241ea0-3a69-421f-9ef3-ca3ce33aaf33" uri="/customer">
                 <to uri="direct:getCustomerAndDetail"/>
             </get>
+            <get id="5ae1ad52-1efe-4c14-97a3-86731dccb48d" uri="/">
+                <to uri="direct:home"/>
+            </get>
         </rest>
         <!-- Home route -->
         <route id="home-route">
             <from id="_from7" uri="direct:home"/>
-            <setBody>
-            	<constant>Home</constant>
+            <setBody id="_setBody5">
+                <constant>Home</constant>
             </setBody>
             <to id="_to4" uri="mock:home"/>
         </route>
