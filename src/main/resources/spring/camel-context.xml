@@ -103,11 +103,6 @@
                 <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
             </setBody>
         </route>
-        <route id="get-timer">
-            <from id="_from8" uri="timer://foo?period=5s"/>
-            <log id="_log9" message="Periodic 5s task"/>
-            <to id="_to5" uri="direct:customerDataFromCache"/>
-        </route>
         <route id="clear-cache">
             <from id="_from9" uri="direct:clearCache"/>
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader9">
@@ -124,6 +119,7 @@
                 <constant>CustomerComplete</constant>
             </setHeader>
             <log id="_log10" message="Customer cache removed"/>
+            <log message="${header.CamelInfinispanOperationResult}"/>
         </route>
         <route id="customer-cache-to-data">
             <from id="_from3" uri="direct:customerDataFromCache"/>
