@@ -15,6 +15,9 @@
             contextPath="/" port="8080" scheme="http"/>
         <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
+            <get id="d130ce26-b684-44ee-b956-90e079e7b61c" uri="/api/deleteAllCache">
+                <to uri="direct:clearCache"/>
+            </get>
             <get id="fcd856e4-3a5e-4056-b12a-0558699dc4da" uri="/welcome">
                 <to uri="direct:welcome"/>
             </get>
@@ -98,9 +101,16 @@
             </setBody>
         </route>
         <route id="get-timer">
-        	<from uri="timer://foo?period=2s"/>
-        	<to uri="direct:customerDataFromCache"/>
-        	<log message="Periodic get response: ${body}"/>
+            <from id="_from8" uri="timer://foo?period=5s"/>
+            <log message="Periodic 5s task"/>
+            <to id="_to5" uri="direct:customerDataFromCache"/>
+        </route>
+        <route id="clear-cache">
+            <from id="_from9" uri="direct:clearCache"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader9">
+                <constant>CamelInfinispanOperationClear</constant>
+            </setHeader>
+            <log id="_log8" message="CACHE CLEARED!!"/>
         </route>
         <route id="customer-cache-to-data">
             <from id="_from3" uri="direct:customerDataFromCache"/>
