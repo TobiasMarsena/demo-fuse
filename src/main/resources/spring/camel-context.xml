@@ -76,7 +76,7 @@
                 <simple>${body}</simple>
             </setHeader>
             <setHeader headerName="CamelInfinispanKey" id="_setHeader7">
-                <constant>CustomerFull</constant>
+                <constant>CompleteCustomer</constant>
             </setHeader>
             <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader8">
                 <constant>2</constant>
@@ -103,7 +103,7 @@
                 <constant>CamelInfinispanOperationGet</constant>
             </setHeader>
             <setHeader headerName="CamelInfinispanKey" id="_setHeader5">
-                <constant>CustomerFull</constant>
+                <constant>CompleteCustomer</constant>
             </setHeader>
             <to id="_to8" uri="infinispan://{{jdg.url}}"/>
             <setBody id="setResultBody">
