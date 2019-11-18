@@ -79,10 +79,7 @@
                 <constant>CustomerFull</constant>
             </setHeader>
             <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader8">
-                <constant>3000</constant>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanLifeTimeUnit" id="_setHeader9">
-                <constant>millisecond</constant>
+                <constant>2</constant>
             </setHeader>
             <to id="_to3" uri="infinispan://{{jdg.url}}"/>
             <unmarshal id="_unmarshal1" ref="custFull"/>
