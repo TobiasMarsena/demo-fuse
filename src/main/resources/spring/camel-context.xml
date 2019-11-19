@@ -108,6 +108,7 @@
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader9">
                 <constant>CamelInfinispanOperationClear</constant>
             </setHeader>
+            <to id="_to5" uri="infinispan://{{jdg.url}}"/>
             <log id="_log8" message="CACHE CLEARED!!"/>
         </route>
         <route id="remove-cache">
@@ -118,8 +119,18 @@
             <setHeader headerName="CamelInfinispanKey" id="_setHeader11">
                 <constant>CustomerComplete</constant>
             </setHeader>
+            <to id="_to6" uri="infinispan://{{jdg.url}}"/>
             <log id="_log10" message="Customer cache removed"/>
-            <log message="${header.CamelInfinispanOperationResult}"/>
+            <log id="_log9" message="${header.CamelInfinispanOperationResult}"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader12">
+                <constant>CamelInfinispanOperationGet</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader13">
+                <constant>CustomerComplete</constant>
+            </setHeader>
+            <log id="_log11" message="Checking cache"/>
+            <to id="_to7" uri="infinispan://{{jdg.url}}"/>
+            <log id="_log12" message="${header.CamelInfinispanOperationResult}"/>
         </route>
         <route id="customer-cache-to-data">
             <from id="_from3" uri="direct:customerDataFromCache"/>
