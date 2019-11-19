@@ -47,7 +47,6 @@
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
             <to id="_to1" uri="direct:customerDataFromCache"/>
-            <log id="_log5" message="body from cache >> ${body}"/>
             <choice id="_choice1">
                 <when id="_when1">
                     <simple>${body} == null</simple>
@@ -66,7 +65,6 @@
                     <log id="_log3" message="return aggregated from API: ${body}"/>
                 </when>
                 <otherwise id="_otherwise1">
-                    <log id="_log2" message="Cache is not null: ${body}"/>
                     <log id="_log7" message="Return data from cache: ${body}"/>
                 </otherwise>
             </choice>
@@ -161,7 +159,6 @@
                     <unmarshal id="_unmarshal4" ref="custFull"/>
                 </when>
             </choice>
-            <log id="_log6" message="Get customer data from JDG: ${body}"/>
         </route>
     </camelContext>
 </beans>
