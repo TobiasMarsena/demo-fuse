@@ -31,17 +31,19 @@
                 <to uri="direct:home"/>
             </get>
         </rest>
+        <!-- Home route -->
         <route id="home-route">
             <from id="_from7" uri="direct:home"/>
             <to id="_to4" uri="mock:home"/>
         </route>
-        <!-- Master route -->
+        <!-- Welcome route -->
         <route id="_route3">
             <from id="_from6" uri="direct:welcome"/>
             <setBody id="_setBody4">
                 <constant>hello</constant>
             </setBody>
         </route>
+        <!-- Master route -->
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
             <to id="_to1" uri="direct:customerDataFromCache"/>
@@ -69,6 +71,7 @@
                 </otherwise>
             </choice>
         </route>
+        <!-- Insert data to cache route -->
         <route id="customer-data-to-cache">
             <from id="_from4" uri="direct:customerDataToCache"/>
             <marshal id="_marshal1">
@@ -91,26 +94,42 @@
             <unmarshal id="_unmarshal1" ref="custFull"/>
             <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
+        <!-- Customer route -->
         <route id="_route1">
             <from id="_from1" uri="direct:getCustomer"/>
             <setBody id="_setBody3">
                 <method beanType="org.mycompany.Customer" method="setCustomerName"/>
             </setBody>
         </route>
+        <!-- Detail route -->
         <route id="_route2">
             <from id="_from2" uri="direct:getDetail"/>
             <setBody id="_setBody2">
                 <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
             </setBody>
         </route>
-        <route id="clear-cache">
-            <from id="_from9" uri="direct:clearCache"/>
-            <setHeader headerName="CamelInfinispanOperation" id="_setHeader9">
-                <constant>CamelInfinispanOperationClear</constant>
-            </setHeader>
-            <to id="_to5" uri="infinispan://{{jdg.url}}"/>
-            <log id="_log8" message="CACHE CLEARED!!"/>
-        </route>
+        <!-- Clear all cache in JDG - DANGEROUS -->
+<!--         <route id="clear-cache"> -->
+<!--             <from id="_from9" uri="direct:clearCache"/> -->
+<!--             <setHeader headerName="CamelInfinispanOperation" id="_setHeader9"> -->
+<!--                 <constant>CamelInfinispanOperationClear</constant> -->
+<!--             </setHeader> -->
+<!--             <to id="_to5" uri="infinispan://{{jdg.url}}"/> -->
+<!--             <log id="_log8" message="CACHE CLEARED!!"/> -->
+<!--         </route> -->
+		<!-- Periodically check cache -->
+		<route id="chech-cache">
+			<from uri="timer://foo?period=15000"/>
+			<to uri="direct:customerDataFromCache"/>
+			<choice>
+				<when>
+					<simple>${body} != null</simple>
+					<log message="Cache has expired. Removing data"/>
+					<to uri="direct:removeCustomerCache"/>
+				</when>
+			</choice>
+		</route>
+		<!-- Remove cache route -->
         <route id="remove-cache">
             <from id="_from10" uri="direct:removeCustomerCache"/>
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader10">
@@ -121,17 +140,8 @@
             </setHeader>
             <to id="_to6" uri="infinispan://{{jdg.url}}"/>
             <log id="_log10" message="Customer cache removed"/>
-            <log id="_log9" message="${header.CamelInfinispanOperationResult}"/>
-            <setHeader headerName="CamelInfinispanOperation" id="_setHeader12">
-                <constant>CamelInfinispanOperationGet</constant>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanKey" id="_setHeader13">
-                <constant>CustomerComplete</constant>
-            </setHeader>
-            <log id="_log11" message="Checking cache"/>
-            <to id="_to7" uri="infinispan://{{jdg.url}}"/>
-            <log id="_log12" message="${header.CamelInfinispanOperationResult}"/>
         </route>
+        <!-- Get cache route -->
         <route id="customer-cache-to-data">
             <from id="_from3" uri="direct:customerDataFromCache"/>
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader4">
