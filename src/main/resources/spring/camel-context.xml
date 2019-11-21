@@ -15,6 +15,12 @@
             contextPath="/" port="8080" scheme="http"/>
         <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
+            <get id="80217ffe-8beb-4856-bf32-6e6a8eb4ac46" uri="/api/detail">
+                <to uri="direct:getDetail"/>
+            </get>
+            <get id="69b3ee08-eeb0-43e6-86e9-a9ea1bc35441" uri="/api/customer">
+                <to uri="direct:getCustomer"/>
+            </get>
             <get id="554a177b-dd91-4931-97f1-9b46a25c3fda" uri="/api/customer/delete">
                 <to uri="direct:removeCustomerCache"/>
             </get>
@@ -86,7 +92,7 @@
                 <constant>CustomerComplete</constant>
             </setHeader>
             <setHeader headerName="CamelInfinispanLifespanTime" id="_setHeader8">
-                <constant>5s</constant>
+                <constant>5</constant>
             </setHeader>
             <to id="_to3" uri="infinispan://{{jdg.url}}"/>
             <unmarshal id="_unmarshal1" ref="custFull"/>
@@ -107,27 +113,27 @@
             </setBody>
         </route>
         <!-- Clear all cache in JDG - DANGEROUS -->
-<!--         <route id="clear-cache"> -->
-<!--             <from id="_from9" uri="direct:clearCache"/> -->
-<!--             <setHeader headerName="CamelInfinispanOperation" id="_setHeader9"> -->
-<!--                 <constant>CamelInfinispanOperationClear</constant> -->
-<!--             </setHeader> -->
-<!--             <to id="_to5" uri="infinispan://{{jdg.url}}"/> -->
-<!--             <log id="_log8" message="CACHE CLEARED!!"/> -->
-<!--         </route> -->
-		<!-- Periodically check cache -->
-		<route id="chech-cache">
-			<from uri="timer://foo?period=15000"/>
-			<to uri="direct:customerDataFromCache"/>
-			<choice>
-				<when>
-					<simple>${body} != null</simple>
-					<log message="Cache has expired. Removing data"/>
-					<to uri="direct:removeCustomerCache"/>
-				</when>
-			</choice>
-		</route>
-		<!-- Remove cache route -->
+        <!--         <route id="clear-cache"> -->
+        <!--             <from id="_from9" uri="direct:clearCache"/> -->
+        <!--             <setHeader headerName="CamelInfinispanOperation" id="_setHeader9"> -->
+        <!--                 <constant>CamelInfinispanOperationClear</constant> -->
+        <!--             </setHeader> -->
+        <!--             <to id="_to5" uri="infinispan://{{jdg.url}}"/> -->
+        <!--             <log id="_log8" message="CACHE CLEARED!!"/> -->
+        <!--         </route> -->
+        <!-- Periodically check cache -->
+        <route id="check-cache">
+            <from id="_from8" uri="timer://foo?period=60000"/>
+            <to id="_to5" uri="direct:customerDataFromCache"/>
+            <choice id="_choice3">
+                <when id="_when3">
+                    <simple>${body} != null</simple>
+                    <log id="_log2" message="Cache has expired. Removing data"/>
+                    <to id="_to7" uri="direct:removeCustomerCache"/>
+                </when>
+            </choice>
+        </route>
+        <!-- Remove cache route -->
         <route id="remove-cache">
             <from id="_from10" uri="direct:removeCustomerCache"/>
             <setHeader headerName="CamelInfinispanOperation" id="_setHeader10">
