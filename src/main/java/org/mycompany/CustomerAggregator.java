@@ -1,5 +1,10 @@
 package org.mycompany;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
@@ -8,14 +13,14 @@ import org.slf4j.LoggerFactory;
 
 public class CustomerAggregator implements AggregationStrategy {
 
-	Logger logger = (Logger) LoggerFactory.getLogger(CustomerAggregator.class);
+	Logger logger = LoggerFactory.getLogger(CustomerAggregator.class);
 	
 	@Override
 	public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
 		logger.info("========= Hello from aggregator ==========");
 		CustomerFull full = new CustomerFull(
-				( (Customer) newExchange.getIn().getHeader("customer")).getName(), 
-				( (CustomerDetail) newExchange.getIn().getHeader("detail")).getDescription());
+				( (Pegawai) newExchange.getIn().getHeader("customer")), 
+				( (Keterangan) newExchange.getIn().getHeader("detail")));
 		newExchange.getIn().setHeader("result", full);
 		
 		return newExchange;
@@ -23,8 +28,21 @@ public class CustomerAggregator implements AggregationStrategy {
 	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		String name = ((Customer) inbound.getHeader("customer")).getName();
-		String detail = ((CustomerDetail) inbound.getHeader("detail")).getDescription();
-		exchange.getOut().setBody(new CustomerFull(name, detail));
+		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
+		List<Keterangan> details = (List<Keterangan>) inbound.getHeader("detail");
+		Map<Long, Keterangan> detailMap = new HashMap<>();
+		for (Keterangan customerDetail : details) {
+			detailMap.put(customerDetail.getNip(), customerDetail);
+		}
+		List<CustomerFull> aggregatedCustomer = new ArrayList<>();
+		for (Pegawai customer : customers) {
+			long key = customer.getNip();
+			if (detailMap.containsKey(key)) {
+				aggregatedCustomer.add(new CustomerFull(customer, detailMap.get(key)));
+			} else {
+				aggregatedCustomer.add(new CustomerFull(customer));
+			}
+		}
+		inbound.setBody(aggregatedCustomer);
 	}
 }

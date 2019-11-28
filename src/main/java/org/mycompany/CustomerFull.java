@@ -1,50 +1,40 @@
 package org.mycompany;
 
-public class CustomerFull {
+public class CustomerFull extends Pegawai {
 	
-	private long id;
-	private String name;
 	private String description;
 	
-	
-	public CustomerFull() {
-		super();
-	}
-	public CustomerFull(long id, String name, String description) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.description = description;
-	}
-	public CustomerFull(String name, String description) {
-		super();
-		this.name = name;
-		this.description = description;
+	public CustomerFull(Pegawai customer, Keterangan detail) {
+		this.nip = customer.getNip();
+		this.name = customer.getName();
+		this.email = customer.getEmail();
+		this.description = detail.getDescription();
 	}
 	
-	public long getId() {
-		return id;
+	public CustomerFull(long id, String name, String email, String description) {
+		super(id, name, email);
+		this.description = description;
 	}
-	public void setId(long id) {
-		this.id = id;
+
+	public CustomerFull(Pegawai customer) {
+		this.nip = customer.getNip();
+		this.name = customer.getName();
+		this.email = customer.getEmail();
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	@Override
 	public String toString() {
-		return "CustomerFull [name=" + name + ", description=" + description + "]";
+		return "CustomerFull [description=" + description + ", nip=" + nip + ", name=" + name + ", email=" + email
+				+ "]";
 	}
-	
 	
 	
 }

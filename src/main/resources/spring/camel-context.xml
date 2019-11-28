@@ -2,7 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans      http://www.springframework.org/schema/beans/spring-beans.xsd                  http://camel.apache.org/schema/spring                 http://camel.apache.org/schema/spring/camel-spring.xsd">
     <bean class="org.mycompany.CustomerAggregator" id="customerAggregationStrategy"/>
+    <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
+    <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mysql">
+<!--     	<property name="driverClassName" value="${jdbc.mysql.driverClassName}"/> -->
+	    <property name="url" value="${jdbc.mysql.url}"/>
+	    <property name="username" value="${jdbc.mysql.username}"/>
+	    <property name="password" value="${jdbc.mysql.password}"/>
+    </bean>
+    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mariadb">
+<!--     	<property name="driverClassName" value="${jdbc.mariadb.driverClassName}"/> -->
+	    <property name="url" value="${jdbc.mariadb.url}"/>
+	    <property name="username" value="${jdbc.mariadb.username}"/>
+	    <property name="password" value="${jdbc.mariadb.password}"/>
+    </bean>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+    	<routeBuilder ref="httpRoute"/>
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
@@ -45,10 +60,10 @@
         <!-- Welcome route -->
         <route id="_route3">
             <from id="_from6" uri="direct:welcome"/>
-            <setBody id="_setBody4">
-                <constant>hello</constant>
-            </setBody>
+            <log message="Welcome. Redirecting to API to API Route . . ."/>
+            <to uri="direct:apiToApi"/>
         </route>
+        
         <!-- Master route -->
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
@@ -57,16 +72,7 @@
                 <when id="_when1">
                     <simple>${body} == null</simple>
                     <log id="_log1" message="Cache is null. Populating cache . . ."/>
-                    <setHeader headerName="customer" id="_setHeader1">
-                        <method beanType="org.mycompany.Customer" method="setCustomerName"/>
-                    </setHeader>
-                    <setHeader headerName="detail" id="_setHeader3">
-                        <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
-                    </setHeader>
-                    <setBody id="_setBody1">
-                        <method
-                            beanType="org.mycompany.CustomerAggregator" method="createFullBody"/>
-                    </setBody>
+                    <to uri="direct:apiToApi"/>
                     <to id="_to2" uri="direct:customerDataToCache"/>
                     <log id="_log3" message="return aggregated from API: ${body}"/>
                 </when>
@@ -98,19 +104,19 @@
             <unmarshal id="_unmarshal1" ref="custFull"/>
             <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
-        <!-- Customer route -->
+<!--         Customer route -->
         <route id="_route1">
             <from id="_from1" uri="direct:getCustomer"/>
-            <setBody id="_setBody3">
-                <method beanType="org.mycompany.Customer" method="setCustomerName"/>
-            </setBody>
+            <log message="Reached GetCustomer. Generating values . . ."/>
+            <bean ref="customerGenerator" method="generateCustomer"/>
+            <log message="GetCustomer API returns == ${body}"/>
         </route>
-        <!-- Detail route -->
+<!--         Detail route -->
         <route id="_route2">
             <from id="_from2" uri="direct:getDetail"/>
-            <setBody id="_setBody2">
-                <method beanType="org.mycompany.CustomerDetail" method="setDetail"/>
-            </setBody>
+            <log message="Reached GetDetail. Generating values . . ."/>
+            <bean ref="customerGenerator" method="generateDetail"/>
+            <log message="GetDetail API returns == ${body}"/>
         </route>
         <!-- Clear all cache in JDG - DANGEROUS -->
         <!--         <route id="clear-cache"> -->
@@ -165,6 +171,18 @@
                     <unmarshal id="_unmarshal4" ref="custFull"/>
                 </when>
             </choice>
+        </route>
+        <!-- Access MySQL Database periodically -->
+        <route id="access-mysql">
+        	<from uri="timer:mysqlSelect?period=5s&amp;repeatCount=3"/>
+        	<to uri="sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql"/>
+        	<log message="From MySQL: ${body}"/>
+        </route>
+        <!-- Access MariaDB Database periodically -->
+        <route id="access-mariadb">
+        	<from uri="timer:mariadbSelect?period=5s&amp;repeatCount=3"/>
+        	<to uri="sql:SELECT * FROM Keterangan?dataSource=jdbc-mariadb"/>
+        	<log message="From MariaDB: ${body}"/>
         </route>
     </camelContext>
 </beans>
