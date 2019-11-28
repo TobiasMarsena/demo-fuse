@@ -5,13 +5,13 @@
     <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
     <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mysql">
-<!--     	<property name="driverClassName" value="${jdbc.mysql.driverClassName}"/> -->
+    	<property name="driverClassName" value="${jdbc.mysql.driverClassName}"/>
 	    <property name="url" value="${jdbc.mysql.url}"/>
 	    <property name="username" value="${jdbc.mysql.username}"/>
 	    <property name="password" value="${jdbc.mysql.password}"/>
     </bean>
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mariadb">
-<!--     	<property name="driverClassName" value="${jdbc.mariadb.driverClassName}"/> -->
+    	<property name="driverClassName" value="${jdbc.mariadb.driverClassName}"/>
 	    <property name="url" value="${jdbc.mariadb.url}"/>
 	    <property name="username" value="${jdbc.mariadb.username}"/>
 	    <property name="password" value="${jdbc.mariadb.password}"/>
@@ -104,20 +104,7 @@
             <unmarshal id="_unmarshal1" ref="custFull"/>
             <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
-<!--         Customer route -->
-        <route id="_route1">
-            <from id="_from1" uri="direct:getCustomer"/>
-            <log message="Reached GetCustomer. Generating values . . ."/>
-            <bean ref="customerGenerator" method="generateCustomer"/>
-            <log message="GetCustomer API returns == ${body}"/>
-        </route>
-<!--         Detail route -->
-        <route id="_route2">
-            <from id="_from2" uri="direct:getDetail"/>
-            <log message="Reached GetDetail. Generating values . . ."/>
-            <bean ref="customerGenerator" method="generateDetail"/>
-            <log message="GetDetail API returns == ${body}"/>
-        </route>
+
         <!-- Clear all cache in JDG - DANGEROUS -->
         <!--         <route id="clear-cache"> -->
         <!--             <from id="_from9" uri="direct:clearCache"/> -->
