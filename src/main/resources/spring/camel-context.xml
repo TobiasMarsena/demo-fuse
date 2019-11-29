@@ -20,11 +20,11 @@
     	<routeBuilder ref="httpRoute"/>
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
-                contentTypeHeader="false"
+                contentTypeHeader="false" 
                 enableJaxbAnnotationModule="false" id="custFull"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.CustomerFull"
-                useDefaultObjectMapper="true" useList="false"/>
+                useDefaultObjectMapper="true" useList="true"/>
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet"
             contextPath="/" port="8080" scheme="http"/>
