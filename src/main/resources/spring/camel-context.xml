@@ -4,14 +4,14 @@
     <bean class="org.mycompany.CustomerAggregator" id="customerAggregationStrategy"/>
     <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
     <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
-    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mysql">
-<!--     	<property name="driverClassName" value="${jdbc.mysql.driverClassName}"/> -->
+    <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mysql">
+    	<property name="driverClassName" value="${jdbc.mysql.driverClassName}"/>
 	    <property name="url" value="${jdbc.mysql.url}"/>
 	    <property name="username" value="${jdbc.mysql.username}"/>
 	    <property name="password" value="${jdbc.mysql.password}"/>
     </bean>
-    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="jdbc-mariadb">
-<!--     	<property name="driverClassName" value="${jdbc.mariadb.driverClassName}"/> -->
+    <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mariadb">
+    	<property name="driverClassName" value="${jdbc.mariadb.driverClassName}"/>
 	    <property name="url" value="${jdbc.mariadb.url}"/>
 	    <property name="username" value="${jdbc.mariadb.username}"/>
 	    <property name="password" value="${jdbc.mariadb.password}"/>
