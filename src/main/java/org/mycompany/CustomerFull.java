@@ -4,6 +4,7 @@ public class CustomerFull extends Pegawai {
 	
 	private String description;
 	
+	public CustomerFull() {}
 	public CustomerFull(Pegawai customer, Keterangan detail) {
 		this.nip = customer.getNip();
 		this.name = customer.getName();
