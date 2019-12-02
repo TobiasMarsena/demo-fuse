@@ -3,6 +3,8 @@ package org.mycompany.route;
 import java.io.IOException;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.spi.DataFormat;
 import org.mycompany.CustomerAggregator;
 import org.mycompany.CustomerGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ public class HTTPRoute extends RouteBuilder {
 	CustomerAggregator customerAggregator;
 	@Autowired
 	CustomerGenerator customerGenerator;
-	
+		
 	@Override
 	public void configure() throws Exception {
 		

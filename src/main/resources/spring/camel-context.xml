@@ -180,6 +180,7 @@
         <route id="mysql-scenario">
             <from id="_from9" uri="direct:mysqlToApi"/>
             <to id="_to13" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
+            <unmarshal ref="custFull"/>
             <setHeader headerName="customer" id="_setHeader1">
                 <simple>${body}</simple>
             </setHeader>
@@ -192,10 +193,12 @@
         <route id="mariadb-scenario">
             <from id="_from11" uri="direct:mysqlToMariadb"/>
             <to id="_to16" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
+            <unmarshal ref="custFull"/>
             <setHeader headerName="customer" id="_setHeader9">
                 <simple>${body}</simple>
             </setHeader>
             <to id="_to17" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-mariadb"/>
+            <unmarshal ref="custFull"/>
             <setHeader headerName="detail" id="_setHeader12">
                 <simple>${body}</simple>
             </setHeader>
