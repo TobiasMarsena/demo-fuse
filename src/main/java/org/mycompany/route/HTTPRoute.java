@@ -27,23 +27,13 @@ public class HTTPRoute extends RouteBuilder {
 			.setHeader("customer", simple("${body}"))
 			.to("direct:getDetail")
 			.setHeader("detail", simple("${body}"))
+			.to("direct:aggregateHeaders");
+		from("direct:aggregateHeaders")
 			.bean(customerAggregator, "createFullBody");
 		from("direct:getCustomer")
 			.bean(customerGenerator, "generateCustomer");
 		from("direct:getDetail")
 			.bean(customerGenerator, "generateDetail");
-		from("direct:mysqlToApi")
-			.to("sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql")
-			.setHeader("customer", simple("${body}"))
-			.to("direct:getDetail")
-			.setHeader("detail", simple("${body}"))
-			.bean(customerAggregator, "createFullBody");
-		from("direct:mysqlToMariadb")
-			.to("sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql")
-			.setHeader("customer", simple("${body}"))
-			.to("sql:SELECT * FROM Keterangan?datasource=jdbc-mariadb")
-			.setHeader("detail", simple("${body}"))
-			.bean(customerAggregator, "createFullBody");
 	}
 	
 	
