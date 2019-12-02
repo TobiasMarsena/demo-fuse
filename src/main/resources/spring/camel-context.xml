@@ -27,21 +27,21 @@
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.CustomerFull"
                 enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useDefaultObjectMapper="true" useList="true"/>
+                useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
                 enableJaxbAnnotationModule="false" id="pegawai"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Pegawai"
                 enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useDefaultObjectMapper="true" useList="true"/>
+                useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
                 enableJaxbAnnotationModule="false" id="keterangan"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Keterangan"
                 enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useDefaultObjectMapper="true" useList="true"/>
+                useList="true"/>
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet"
             contextPath="/" port="8080" scheme="http"/>
