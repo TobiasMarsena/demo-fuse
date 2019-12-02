@@ -36,6 +36,7 @@ public class CustomerAggregator implements AggregationStrategy {
 			logger.info("Array Customers");
 			for (Entry<Long, Pegawai> cust : customer.entrySet()) {
 				logger.info("Map Customers");
+				logger.info(cust.getValue().toString());
 				long key = cust.getValue().getNip();
 				if (details.get(1).containsKey(key)) {
 					aggregatedCustomer.add(new CustomerFull(cust.getValue(), details.get(1).get(key)));
