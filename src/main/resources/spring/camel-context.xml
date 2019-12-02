@@ -4,23 +4,26 @@
     <bean class="org.mycompany.CustomerAggregator" id="customerAggregationStrategy"/>
     <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
     <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
-    <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mysql">
-    	<property name="driverClass" value="${jdbc.mysql.driverClassName}"/>
-	    <property name="url" value="${jdbc.mysql.url}"/>
-	    <property name="username" value="${jdbc.mysql.username}"/>
-	    <property name="password" value="${jdbc.mysql.password}"/>
+    <bean
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
+        id="jdbc-mysql" scope="singleton">
+        <property name="driverClass" value="${jdbc.mysql.driverClassName}"/>
+        <property name="url" value="${jdbc.mysql.url}"/>
+        <property name="username" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
     </bean>
-    <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mariadb">
-    	<property name="driverClass" value="${jdbc.mariadb.driverClassName}"/>
-	    <property name="url" value="${jdbc.mariadb.url}"/>
-	    <property name="username" value="${jdbc.mariadb.username}"/>
-	    <property name="password" value="${jdbc.mariadb.password}"/>
+    <bean
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mariadb">
+        <property name="driverClass" value="${jdbc.mariadb.driverClassName}"/>
+        <property name="url" value="${jdbc.mariadb.url}"/>
+        <property name="username" value="${jdbc.mariadb.username}"/>
+        <property name="password" value="${jdbc.mariadb.password}"/>
     </bean>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-    	<routeBuilder ref="httpRoute"/>
+        <routeBuilder ref="httpRoute"/>
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
-                contentTypeHeader="false" 
+                contentTypeHeader="false"
                 enableJaxbAnnotationModule="false" id="custFull"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.CustomerFull"
@@ -30,6 +33,12 @@
             contextPath="/" port="8080" scheme="http"/>
         <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
+            <get id="8b5f1ec6-499a-4867-843f-46485ab37733" uri="/mysql/mariadb">
+                <to uri="direct:mysqlToMariadb"/>
+            </get>
+            <get id="0e058bb2-08a4-46eb-ac8f-99fcfa71ce04" uri="/mysql/api">
+                <to uri="direct:mysqlToApi"/>
+            </get>
             <get id="80217ffe-8beb-4856-bf32-6e6a8eb4ac46" uri="/api/detail">
                 <to uri="direct:getDetail"/>
             </get>
@@ -60,10 +69,9 @@
         <!-- Welcome route -->
         <route id="_route3">
             <from id="_from6" uri="direct:welcome"/>
-            <log message="Welcome. Redirecting to API to API Route . . ."/>
-            <to uri="direct:apiToApi"/>
+            <log id="_log5" message="Welcome. Redirecting to API to API Route . . ."/>
+            <to id="_to9" uri="direct:apiToApi"/>
         </route>
-        
         <!-- Master route -->
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
@@ -72,7 +80,7 @@
                 <when id="_when1">
                     <simple>${body} == null</simple>
                     <log id="_log1" message="Cache is null. Populating cache . . ."/>
-                    <to uri="direct:apiToApi"/>
+                    <to id="_to10" uri="direct:apiToApi"/>
                     <to id="_to2" uri="direct:customerDataToCache"/>
                     <log id="_log3" message="return aggregated from API: ${body}"/>
                 </when>
@@ -104,7 +112,6 @@
             <unmarshal id="_unmarshal1" ref="custFull"/>
             <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
-
         <!-- Clear all cache in JDG - DANGEROUS -->
         <!--         <route id="clear-cache"> -->
         <!--             <from id="_from9" uri="direct:clearCache"/> -->
@@ -160,16 +167,23 @@
             </choice>
         </route>
         <!-- Access MySQL Database periodically -->
-        <route id="access-mysql">
-        	<from uri="timer:mysqlSelect?period=5s&amp;repeatCount=3"/>
-        	<to uri="sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql"/>
-        	<log message="From MySQL: ${body}"/>
-        </route>
+<!--         <route id="mysql-scenario"> -->
+<!--             <from id="_from1" uri="direct:mysqlToApi"/> -->
+<!--             <to id="_to11" uri="sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql"/> -->
+<!-- 			<setHeader headerName="customer"> -->
+<!-- 				<simple>${body}</simple> -->
+<!-- 			</setHeader> -->
+<!-- 			<to uri="direct:getDetail"/> -->
+<!-- 			<setHeader headerName="detail"> -->
+<!-- 				<simple>${body}</simple> -->
+<!-- 			</setHeader> -->
+<!-- 			<bean></bean> -->
+<!--         </route> -->
         <!-- Access MariaDB Database periodically -->
-        <route id="access-mariadb">
-        	<from uri="timer:mariadbSelect?period=5s&amp;repeatCount=3"/>
-        	<to uri="sql:SELECT * FROM Keterangan?dataSource=jdbc-mariadb"/>
-        	<log message="From MariaDB: ${body}"/>
-        </route>
+<!--         <route id="mariadb-scenario"> -->
+<!--             <from id="_from2" uri="direct:mysqlToMariadb"/> -->
+<!--             <to id="_to12" uri="sql:SELECT * FROM Keterangan?dataSource=jdbc-mariadb"/> -->
+<!--             <log id="_log8" message="From MariaDB: ${body}"/> -->
+<!--         </route> -->
     </camelContext>
 </beans>

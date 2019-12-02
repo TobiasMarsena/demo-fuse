@@ -2,19 +2,19 @@ package org.mycompany;
 
 public class CustomerFull extends Pegawai {
 	
-	private String description;
+	private String keterangan;
 	
 	public CustomerFull() {}
 	public CustomerFull(Pegawai customer, Keterangan detail) {
 		this.nip = customer.getNip();
 		this.name = customer.getName();
 		this.email = customer.getEmail();
-		this.description = detail.getDescription();
+		this.keterangan = detail.getKeterangan();
 	}
 	
-	public CustomerFull(long id, String name, String email, String description) {
+	public CustomerFull(long id, String name, String email, String keterangan) {
 		super(id, name, email);
-		this.description = description;
+		this.keterangan = keterangan;
 	}
 
 	public CustomerFull(Pegawai customer) {
@@ -23,17 +23,17 @@ public class CustomerFull extends Pegawai {
 		this.email = customer.getEmail();
 	}
 
-	public String getDescription() {
-		return description;
+	public String getKeterangan() {
+		return keterangan;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setKeterangan(String keterangan) {
+		this.keterangan = keterangan;
 	}
 
 	@Override
 	public String toString() {
-		return "CustomerFull [description=" + description + ", nip=" + nip + ", name=" + name + ", email=" + email
+		return "CustomerFull [keterangan=" + keterangan + ", nip=" + nip + ", name=" + name + ", email=" + email
 				+ "]";
 	}
 	

@@ -32,6 +32,18 @@ public class HTTPRoute extends RouteBuilder {
 			.bean(customerGenerator, "generateCustomer");
 		from("direct:getDetail")
 			.bean(customerGenerator, "generateDetail");
+		from("directLmysqlToApi")
+			.to("sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql")
+			.setHeader("customer", simple("${body}"))
+			.to("direct:getDetail")
+			.setHeader("detail", simple("${body}"))
+			.bean(customerAggregator, "createFullBody");
+		from("direct:mysqlToMariadb")
+			.to("sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql")
+			.setHeader("customer", simple("${body}"))
+			.to("sql:SELECT * FROM Keterangan?datasource=jdbc-mariadb")
+			.setHeader("detail", simple("${body}"))
+			.bean(customerAggregator, "createFullBody");
 	}
 	
 	

@@ -7,11 +7,11 @@ public class Keterangan {
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long nip;
 	
-	private String description;
+	private String keterangan;
 
-	public Keterangan(long id, String description) {
+	public Keterangan(long id, String keterangan) {
 		setNip(id);
-		setDescription(description);
+		setKeterangan(keterangan);
 	}
 	public long getNip() {
 		return nip;
@@ -19,10 +19,10 @@ public class Keterangan {
 	public void setNip(long nip) {
 		this.nip = nip;
 	}
-	public String getDescription() {
-		return description;
+	public String getKeterangan() {
+		return keterangan;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setKeterangan(String keterangan) {
+		this.keterangan = keterangan;
 	}	
 }
