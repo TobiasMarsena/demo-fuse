@@ -10,6 +10,7 @@ import org.apache.camel.Message;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 public class CustomerAggregator implements AggregationStrategy {
 
@@ -28,19 +29,21 @@ public class CustomerAggregator implements AggregationStrategy {
 	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
-		List<Keterangan> details = (List<Keterangan>) inbound.getHeader("detail");
+		List<LinkedCaseInsensitiveMap<Pegawai>> customers = (List<Pegawai>) inbound.getHeader("customer");
+		List<LinkedCaseInsensitiveMap<Keterangan>> details = (List<Keterangan>) inbound.getHeader("detail");
 		Map<Long, Keterangan> detailMap = new HashMap<>();
 		for (Keterangan customerDetail : details) {
 			detailMap.put(customerDetail.getNip(), customerDetail);
 		}
 		List<CustomerFull> aggregatedCustomer = new ArrayList<>();
-		for (Pegawai customer : customers) {
-			long key = customer.getNip();
+		for (LinkedCaseInsensitiveMap<Pegawai> customer : customers) {
+			logger.info("customer:  "+ customer.toString());
+			logger.info("KeySet:  " + customer.keySet().toString());
+			long key = customer.get(1).getNip();
 			if (detailMap.containsKey(key)) {
-				aggregatedCustomer.add(new CustomerFull(customer, detailMap.get(key)));
+				aggregatedCustomer.add(new CustomerFull(customer.get(1), detailMap.get(key)));
 			} else {
-				aggregatedCustomer.add(new CustomerFull(customer));
+				aggregatedCustomer.add(new CustomerFull(customer.get(1)));
 			}
 		}
 		inbound.setBody(aggregatedCustomer);
