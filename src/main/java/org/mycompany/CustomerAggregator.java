@@ -29,15 +29,19 @@ public class CustomerAggregator implements AggregationStrategy {
 	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		Map<Long, Pegawai> customers = (Map<Long, Pegawai>) inbound.getHeader("customer");
-		Map<Long, Keterangan> details = (Map<Long, Keterangan>) inbound.getHeader("detail");
+		ArrayList<Map<Long, Pegawai>> customers = (ArrayList<Map<Long, Pegawai>>) inbound.getHeader("customer");
+		ArrayList<Map<Long, Keterangan>> details = (ArrayList<Map<Long, Keterangan>>) inbound.getHeader("detail");
 		List<CustomerFull> aggregatedCustomer = new ArrayList<>();
-		for (Entry<Long, Pegawai> customer : customers.entrySet()) {
-			long key = customer.getValue().getNip();
-			if (details.containsKey(key)) {
-				aggregatedCustomer.add(new CustomerFull(customer.getValue(), details.get(key)));
-			} else {
-				aggregatedCustomer.add(new CustomerFull(customer.getValue()));
+		for (Map<Long, Pegawai> customer : customers) {
+			logger.info("Array Customers");
+			for (Entry<Long, Pegawai> cust : customer.entrySet()) {
+				logger.info("Map Customers");
+				long key = cust.getValue().getNip();
+				if (details.get(1).containsKey(key)) {
+					aggregatedCustomer.add(new CustomerFull(cust.getValue(), details.get(1).get(key)));
+				} else {
+					aggregatedCustomer.add(new CustomerFull(cust.getValue()));
+				}
 			}
 		}
 		inbound.setBody(aggregatedCustomer);
