@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
 public class CustomerAggregator implements AggregationStrategy {
 
@@ -29,21 +29,15 @@ public class CustomerAggregator implements AggregationStrategy {
 	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		List<LinkedCaseInsensitiveMap<Pegawai>> customers = (List<Pegawai>) inbound.getHeader("customer");
-		List<LinkedCaseInsensitiveMap<Keterangan>> details = (List<Keterangan>) inbound.getHeader("detail");
-		Map<Long, Keterangan> detailMap = new HashMap<>();
-		for (Keterangan customerDetail : details) {
-			detailMap.put(customerDetail.getNip(), customerDetail);
-		}
+		Map<Long, Pegawai> customers = (Map<Long, Pegawai>) inbound.getHeader("customer");
+		Map<Long, Keterangan> details = (Map<Long, Keterangan>) inbound.getHeader("detail");
 		List<CustomerFull> aggregatedCustomer = new ArrayList<>();
-		for (LinkedCaseInsensitiveMap<Pegawai> customer : customers) {
-			logger.info("customer:  "+ customer.toString());
-			logger.info("KeySet:  " + customer.keySet().toString());
-			long key = customer.get(1).getNip();
-			if (detailMap.containsKey(key)) {
-				aggregatedCustomer.add(new CustomerFull(customer.get(1), detailMap.get(key)));
+		for (Entry<Long, Pegawai> customer : customers.entrySet()) {
+			long key = customer.getValue().getNip();
+			if (details.containsKey(key)) {
+				aggregatedCustomer.add(new CustomerFull(customer.getValue(), details.get(key)));
 			} else {
-				aggregatedCustomer.add(new CustomerFull(customer.get(1)));
+				aggregatedCustomer.add(new CustomerFull(customer.getValue()));
 			}
 		}
 		inbound.setBody(aggregatedCustomer);
