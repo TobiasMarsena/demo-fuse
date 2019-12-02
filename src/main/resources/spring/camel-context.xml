@@ -33,10 +33,10 @@
             contextPath="/" port="8080" scheme="http"/>
         <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
-            <get id="8b5f1ec6-499a-4867-843f-46485ab37733" uri="/mysql/mariadb">
+            <get id="c3431907-5d7c-41f5-9d34-530ae6746fd8" uri="/mysql/mariadb">
                 <to uri="direct:mysqlToMariadb"/>
             </get>
-            <get id="0e058bb2-08a4-46eb-ac8f-99fcfa71ce04" uri="/mysql/api">
+            <get id="ecb00680-5c54-462a-853d-9230186b4030" uri="/mysql/api">
                 <to uri="direct:mysqlToApi"/>
             </get>
             <get id="80217ffe-8beb-4856-bf32-6e6a8eb4ac46" uri="/api/detail">
@@ -167,23 +167,16 @@
             </choice>
         </route>
         <!-- Access MySQL Database periodically -->
-<!--         <route id="mysql-scenario"> -->
-<!--             <from id="_from1" uri="direct:mysqlToApi"/> -->
-<!--             <to id="_to11" uri="sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql"/> -->
-<!-- 			<setHeader headerName="customer"> -->
-<!-- 				<simple>${body}</simple> -->
-<!-- 			</setHeader> -->
-<!-- 			<to uri="direct:getDetail"/> -->
-<!-- 			<setHeader headerName="detail"> -->
-<!-- 				<simple>${body}</simple> -->
-<!-- 			</setHeader> -->
-<!-- 			<bean></bean> -->
-<!--         </route> -->
+        <route id="mysql-scenario">
+            <from id="_from1" uri="timer:mysqlSelect?period=5s&amp;repeatCount=3"/>
+            <to id="_to11" uri="sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql"/>
+            <log id="_log6" message="From MySQL: ${body}"/>
+        </route>
         <!-- Access MariaDB Database periodically -->
-<!--         <route id="mariadb-scenario"> -->
-<!--             <from id="_from2" uri="direct:mysqlToMariadb"/> -->
-<!--             <to id="_to12" uri="sql:SELECT * FROM Keterangan?dataSource=jdbc-mariadb"/> -->
-<!--             <log id="_log8" message="From MariaDB: ${body}"/> -->
-<!--         </route> -->
+        <route id="mariadb-scenario">
+            <from id="_from2" uri="timer:mariadbSelect?period=5s&amp;repeatCount=3"/>
+            <to id="_to12" uri="sql:SELECT * FROM Keterangan?dataSource=jdbc-mariadb"/>
+            <log id="_log8" message="From MariaDB: ${body}"/>
+        </route>
     </camelContext>
 </beans>

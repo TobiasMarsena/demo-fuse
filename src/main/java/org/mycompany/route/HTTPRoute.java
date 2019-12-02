@@ -32,7 +32,7 @@ public class HTTPRoute extends RouteBuilder {
 			.bean(customerGenerator, "generateCustomer");
 		from("direct:getDetail")
 			.bean(customerGenerator, "generateDetail");
-		from("directLmysqlToApi")
+		from("direct:mysqlToApi")
 			.to("sql:SELECT * FROM Pegawai?dataSource=jdbc-mysql")
 			.setHeader("customer", simple("${body}"))
 			.to("direct:getDetail")
