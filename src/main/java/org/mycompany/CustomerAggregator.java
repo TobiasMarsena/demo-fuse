@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -29,17 +28,19 @@ public class CustomerAggregator implements AggregationStrategy {
 	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		ArrayList<Map<Long, Pegawai>> customers = (ArrayList<Map<Long, Pegawai>>) inbound.getHeader("customer");
-		ArrayList<Map<Long, Keterangan>> details = (ArrayList<Map<Long, Keterangan>>) inbound.getHeader("detail");
+		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
+		List<Keterangan> details = (List<Keterangan>) inbound.getHeader("detail");
+		Map<Long, Keterangan> detailMap = new HashMap<>();
+		for (Keterangan customerDetail : details) {
+			detailMap.put(customerDetail.getNip(), customerDetail);
+		}
 		List<CustomerFull> aggregatedCustomer = new ArrayList<>();
-		for (Map<Long, Pegawai> customer : customers) {
-			for (Entry<Long, Pegawai> cust : customer.entrySet()) {
-				long key = cust.getValue().getNip();
-				if (details.get(1).containsKey(key)) {
-					aggregatedCustomer.add(new CustomerFull(cust.getValue(), details.get(1).get(key)));
-				} else {
-					aggregatedCustomer.add(new CustomerFull(cust.getValue()));
-				}
+		for (Pegawai customer : customers) {
+			long key = customer.getNip();
+			if (detailMap.containsKey(key)) {
+				aggregatedCustomer.add(new CustomerFull(customer, detailMap.get(key)));
+			} else {
+				aggregatedCustomer.add(new CustomerFull(customer));
 			}
 		}
 		inbound.setBody(aggregatedCustomer);
