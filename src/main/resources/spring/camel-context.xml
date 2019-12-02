@@ -5,8 +5,7 @@
     <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
     <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
     <bean
-        class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
-        id="jdbc-mysql" scope="singleton">
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mysql">
         <property name="driverClass" value="${jdbc.mysql.driverClassName}"/>
         <property name="url" value="${jdbc.mysql.url}"/>
         <property name="username" value="${jdbc.mysql.username}"/>
