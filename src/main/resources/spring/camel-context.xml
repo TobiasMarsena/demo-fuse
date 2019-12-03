@@ -200,9 +200,9 @@
         <route id="mysql-scenario">
             <from id="_from9" uri="direct:mysqlToApi"/>
             <to id="_to13" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
-            <convertBodyTo id="_convertBodyTo3" type="java.lang.String"/>
+<!--             <convertBodyTo id="_convertBodyTo3" type="java.lang.String"/> -->
             <log id="_log9" message="${body}"/>
-<!--             <bean beanType="org.mycompany.CustomerAggregator" method="unmarshalQueryResult" /> -->
+            <bean beanType="org.mycompany.CustomerAggregator" method="unmarshalQueryResult" />
             <unmarshal id="_unmarshal2" ref="pegawai"/>
             <setHeader headerName="customer" id="_setHeader1">
                 <simple>${body}</simple>
@@ -217,7 +217,7 @@
         <route id="mariadb-scenario">
             <from id="_from11" uri="direct:mysqlToMariadb"/>
             <to id="_to16" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
-            <convertBodyTo id="_convertBodyTo4" type="java.lang.String"/>
+<!--             <convertBodyTo id="_convertBodyTo4" type="java.lang.String"/> -->
             <unmarshal id="_unmarshal3" ref="pegawai"/>
             <setHeader headerName="customer" id="_setHeader9">
                 <simple>${body}</simple>
