@@ -46,7 +46,7 @@ public class CustomerAggregator implements AggregationStrategy {
 					((Integer) row.get("nip")).longValue(),
 					(String) row.get("keterangan")));
 		}
-		exchange.getIn().setHeader("customer", keteranganList);
+		exchange.getIn().setHeader("detail", keteranganList);
 	}
 	
 	public void createFullBody(Exchange exchange) {
