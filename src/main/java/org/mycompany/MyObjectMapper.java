@@ -1,11 +1,11 @@
 package org.mycompany;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.slf4j.internal.LoggerFactory;
-
-import infinispan.org.jboss.logging.Logger;
 
 public class MyObjectMapper extends ObjectMapper {
 	
