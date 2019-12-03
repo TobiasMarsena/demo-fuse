@@ -31,7 +31,7 @@ public class CustomerAggregator implements AggregationStrategy {
 		List<Pegawai> pegawaiList = new ArrayList<>();
 		for (Map<String, Object> row : rows) {
 			pegawaiList.add(new Pegawai(
-					(Long) row.get("nip"), 
+					((Integer) row.get("nip")).longValue(), 
 					(String) row.get("name"), 
 					(String) row.get("email")));
 		}
@@ -43,7 +43,7 @@ public class CustomerAggregator implements AggregationStrategy {
 		List<Keterangan> keteranganList = new ArrayList<>();
 		for (Map<String, Object> row : rows) {
 			keteranganList.add(new Keterangan(
-					(Long) row.get("nip"),
+					((Integer) row.get("nip")).longValue(),
 					(String) row.get("keterangan")));
 		}
 		exchange.getIn().setHeader("customer", keteranganList);
