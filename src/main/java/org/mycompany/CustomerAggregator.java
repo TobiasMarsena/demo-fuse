@@ -26,6 +26,12 @@ public class CustomerAggregator implements AggregationStrategy {
 		return newExchange;
 	}
 	
+	public void unmarshalQueryResult(Exchange exchange) {
+		logger.info("Reached method unmarshalQueryResult");
+		logger.info(exchange.getIn().getBody().toString());
+		List<Pegawai> pegawai = (List<Pegawai>) exchange.getIn().getBody();
+	}
+	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
 		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
