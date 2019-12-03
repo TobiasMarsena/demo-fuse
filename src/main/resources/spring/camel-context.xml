@@ -203,7 +203,7 @@
 <!--             <convertBodyTo id="_convertBodyTo3" type="java.lang.String"/> -->
             <log id="_log9" message="${body}"/>
             <bean beanType="org.mycompany.CustomerAggregator" method="unmarshalQueryResult" />
-            <unmarshal id="_unmarshal2" ref="pegawai"/>
+<!--             <unmarshal id="_unmarshal2" ref="pegawai"/> -->
             <setHeader headerName="customer" id="_setHeader1">
                 <simple>${body}</simple>
             </setHeader>
