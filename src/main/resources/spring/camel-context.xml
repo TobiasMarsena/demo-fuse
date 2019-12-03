@@ -4,6 +4,7 @@
     <bean class="org.mycompany.CustomerAggregator" id="customerAggregationStrategy"/>
     <bean class="org.mycompany.CustomerGenerator" id="customerGenerator"/>
     <bean class="org.mycompany.route.HTTPRoute" id="httpRoute"/>
+    <bean class="org.mycompany.MyObjectMapper" id="myObjectMapper"/>
     <bean
         class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-mysql">
         <property name="driverClass" value="${jdbc.mysql.driverClassName}"/>
@@ -23,23 +24,26 @@
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="custFull"
-                library="Jackson" prettyPrint="false"
+                library="Jackson"
+                objectMapper="org.mycompany.MyObjectMapper"
+                prettyPrint="false"
                 unmarshalTypeName="org.mycompany.CustomerFull"
                 useDefaultObjectMapper="true" useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="pegawai"
-                library="Jackson" prettyPrint="false"
+                library="Jackson"
+                objectMapper="org.mycompany.MyObjectMapper"
+                prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Pegawai"
                 useDefaultObjectMapper="true" useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="keterangan"
-                library="Jackson" prettyPrint="false"
+                library="Jackson"
+                objectMapper="org.mycompany.MyObjectMapper"
+                prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Keterangan"
                 useDefaultObjectMapper="true" useList="true"/>
         </dataFormats>
