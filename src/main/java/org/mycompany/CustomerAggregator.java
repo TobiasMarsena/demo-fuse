@@ -26,6 +26,29 @@ public class CustomerAggregator implements AggregationStrategy {
 		return newExchange;
 	}
 	
+	public void processPegawai(Exchange exchange) {
+		List<Map<String, Object>> rows = exchange.getIn().getBody(List.class);
+		List<Pegawai> pegawaiList = new ArrayList<>();
+		for (Map<String, Object> row : rows) {
+			pegawaiList.add(new Pegawai(
+					(Long) row.get("nip"), 
+					(String) row.get("name"), 
+					(String) row.get("email")));
+		}
+		exchange.getIn().setHeader("customer", pegawaiList);
+	}
+	
+	public void processKeterangan(Exchange exchange) {
+		List<Map<String, Object>> rows = exchange.getIn().getBody(List.class);
+		List<Keterangan> keteranganList = new ArrayList<>();
+		for (Map<String, Object> row : rows) {
+			keteranganList.add(new Keterangan(
+					(Long) row.get("nip"),
+					(String) row.get("keterangan")));
+		}
+		exchange.getIn().setHeader("customer", keteranganList);
+	}
+	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
 		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
