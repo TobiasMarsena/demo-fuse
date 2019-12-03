@@ -26,7 +26,7 @@ public class HTTPRoute extends RouteBuilder {
 		
 		onException(IOException.class)
 			.log("${exception}")
-			.to("mock:IOHandler");
+			.to("mock:IOHandler"); 
 		
 		from("direct:apiToApi")
 			.to("direct:getCustomer")
