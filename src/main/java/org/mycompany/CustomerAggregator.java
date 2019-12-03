@@ -26,24 +26,8 @@ public class CustomerAggregator implements AggregationStrategy {
 		return newExchange;
 	}
 	
-	public void unmarshalPegawai(Exchange exchange) {
-		List<Map<String, String>> pegawaiList = exchange.getIn().getBody(List.class);
-		for (Map<String, String> pegawai : pegawaiList) {
-			logger.info(pegawai.get("nip") + pegawai.get("name") + pegawai.get("email"));
-		}
-		exchange.getIn().setHeader("customer", pegawaiList);
-	}
-	public void unmarshalKeterangan(Exchange exchange) {
-		List<Keterangan> keteranganList = (List<Keterangan>) exchange.getIn().getBody();
-		for (Keterangan keterangan : keteranganList) {
-			logger.info(keterangan.toString());
-		}
-		exchange.getIn().setHeader("detail", keteranganList);
-	}
-	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
-		logger.info("Create Full Body. Converting to List<Pegawai>");
 		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
 		List<Keterangan> details = (List<Keterangan>) inbound.getHeader("detail");
 		Map<Long, Keterangan> detailMap = new HashMap<>();
