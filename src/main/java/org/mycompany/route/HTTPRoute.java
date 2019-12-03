@@ -9,6 +9,10 @@ import org.mycompany.CustomerAggregator;
 import org.mycompany.CustomerGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 public class HTTPRoute extends RouteBuilder {
 
 

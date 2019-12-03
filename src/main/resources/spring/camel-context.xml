@@ -23,25 +23,25 @@
         <dataFormats>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
+                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="custFull"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.CustomerFull"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useList="true"/>
+                useDefaultObjectMapper="true" useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
+                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="pegawai"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Pegawai"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useList="true"/>
+                useDefaultObjectMapper="true" useList="true"/>
             <json allowJmsType="true" allowUnmarshallType="true"
                 contentTypeHeader="false"
+                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
                 enableJaxbAnnotationModule="false" id="keterangan"
                 library="Jackson" prettyPrint="false"
                 unmarshalTypeName="org.mycompany.Keterangan"
-                enableFeatures="ALLOW_UNQUOTED_FIELD_NAMES"
-                useList="true"/>
+                useDefaultObjectMapper="true" useList="true"/>
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet"
             contextPath="/" port="8080" scheme="http"/>
@@ -197,7 +197,7 @@
             <from id="_from9" uri="direct:mysqlToApi"/>
             <to id="_to13" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
             <convertBodyTo id="_convertBodyTo3" type="java.lang.String"/>
-            <log message="${body}"/>
+            <log id="_log9" message="${body}"/>
             <unmarshal id="_unmarshal2" ref="pegawai"/>
             <setHeader headerName="customer" id="_setHeader1">
                 <simple>${body}</simple>
