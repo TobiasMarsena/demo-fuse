@@ -18,7 +18,7 @@
       <dependency>
         <groupId>org.jboss.redhat-fuse</groupId>
         <artifactId>fuse-springboot-bom</artifactId>
-        <version>7.4.0.fuse-740036-redhat-00002</version>
+        <version>${fuse.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -62,7 +62,6 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson</artifactId>
-      <version>3.0.0</version>
       </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
