@@ -27,7 +27,7 @@ public class CustomerAggregator implements AggregationStrategy {
 	}
 	
 	public void unmarshalPegawai(Exchange exchange) {
-		List<Pegawai> pegawaiList = (List<Pegawai>) exchange.getIn().getBody();
+		List<Pegawai> pegawaiList = exchange.getIn().getBody(List.class);
 		for (Pegawai pegawai : pegawaiList) {
 			logger.info(pegawai.toString());
 		}
