@@ -18,6 +18,13 @@
         <property name="username" value="${jdbc.mariadb.username}"/>
         <property name="password" value="${jdbc.mariadb.password}"/>
     </bean>
+    <bean
+        class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-psql">
+        <property name="driverClass" value="${jdbc.psql.driverClassName}"/>
+        <property name="url" value="${jdbc.psql.url}"/>
+        <property name="username" value="${jdbc.psql.username}"/>
+        <property name="password" value="${jdbc.psql.password}"/>
+    </bean>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
         <routeBuilder ref="httpRoute"/>
         <dataFormats>
@@ -44,8 +51,8 @@
             contextPath="/" port="8080" scheme="http"/>
         <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
-            <get id="c3431907-5d7c-41f5-9d34-530ae6746fd8" uri="/mysql/mariadb">
-                <to uri="direct:mysqlToMariadb"/>
+            <get id="c3431907-5d7c-41f5-9d34-530ae6746fd8" uri="/mysql/psql">
+                <to uri="direct:mysqlToPsql"/>
             </get>
             <get id="ecb00680-5c54-462a-853d-9230186b4030" uri="/mysql/api">
                 <to uri="direct:mysqlToApi"/>
@@ -189,24 +196,33 @@
             <to id="_to12" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-mariadb"/>
             <log id="_log8" message="From MariaDB: ${body}"/>
         </route>
+        <!-- Access PostgreSQL Database periodically -->
+        <route id="access-psql">
+            <from id="_from12" uri="timer:psqlSelect?period=5s&amp;repeatCount=3"/>
+            <to id="_to19" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-psql"/>
+            <log id="_log9" message="From PostgreSQL: ${body}"/>
+        </route>
         <!-- MYSQL Scenario -->
         <route id="mysql-scenario">
             <from id="_from9" uri="direct:mysqlToApi"/>
             <to id="_to13" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
-            <bean beanType="org.mycompany.CustomerAggregator" method="processPegawai"/>
+            <bean beanType="org.mycompany.CustomerAggregator"
+                id="_bean1" method="processPegawai"/>
             <to id="_to14" uri="direct:getDetail"/>
             <setHeader headerName="detail" id="_setHeader3">
                 <simple>${body}</simple>
             </setHeader>
             <to id="_to15" uri="direct:aggregateHeaders"/>
         </route>
-        <!-- MariaDB Scenario -->
-        <route id="mariadb-scenario">
-            <from id="_from11" uri="direct:mysqlToMariadb"/>
+        <!-- PostgreSQL Scenario -->
+        <route id="psql-scenario">
+            <from id="_from11" uri="direct:mysqlToPsql"/>
             <to id="_to16" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
-            <bean beanType="org.mycompany.CustomerAggregator" method="processPegawai"/>
-            <to id="_to17" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-mariadb"/>
-            <bean beanType="org.mycompany.CustomerAggregator" method="processKeterangan"/>
+            <bean beanType="org.mycompany.CustomerAggregator"
+                id="_bean2" method="processPegawai"/>
+            <to id="_to17" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-psql"/>
+            <bean beanType="org.mycompany.CustomerAggregator"
+                id="_bean3" method="processKeterangan"/>
             <to id="_to18" uri="direct:aggregateHeaders"/>
         </route>
     </camelContext>
