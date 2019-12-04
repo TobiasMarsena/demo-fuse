@@ -22,7 +22,7 @@
         class="org.springframework.jdbc.datasource.SimpleDriverDataSource" id="jdbc-psql">
         <property name="driverClass" value="${jdbc.psql.driverClassName}"/>
         <property name="url" value="${jdbc.psql.url}"/>
-        <property name="user" value="${jdbc.psql.user}"/>
+        <property name="username" value="${jdbc.psql.user}"/>
         <property name="password" value="${jdbc.psql.password}"/>
     </bean>
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
