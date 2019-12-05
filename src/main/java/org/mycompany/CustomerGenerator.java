@@ -17,8 +17,8 @@ public class CustomerGenerator {
 	
 	public void generateDetail(Exchange exchange) {
 		List<Keterangan> details = new ArrayList<>();
-		details.add(new Keterangan(1234, "Keterangan 1234"));
-		details.add(new Keterangan(2345, "Keterangan 2345"));
+		details.add(new Keterangan(1234, "Keterangan 1234 API"));
+		details.add(new Keterangan(2345, "Keterangan 2345 API"));
 		exchange.getIn().setBody(details);
 	}
 
