@@ -12,6 +12,7 @@ public class CustomerGenerator {
 		customers.add(new Pegawai(1234, "RezaAPI", "reza-api@kemlu.go.id"));
 		customers.add(new Pegawai(2345, "ChrisnaAPI", "chrisna-api@kemlu.go.id"));
 		customers.add(new Pegawai(3456, "TobiasAPI", "tobias-api@kemlu.go.id"));
+		customers.add(new Pegawai(1234, "DuplicateRezaAPI", "reza-duplicate@kemlu.go.id"));
 		exchange.getIn().setBody(customers);
 	}
 	
@@ -19,6 +20,8 @@ public class CustomerGenerator {
 		List<Keterangan> details = new ArrayList<>();
 		details.add(new Keterangan(1234, "Keterangan 1234 API"));
 		details.add(new Keterangan(2345, "Keterangan 2345 API"));
+		details.add(new Keterangan(1234, "Keterangan duplikat API"));
+		details.add(new Keterangan(2345, "Keterangan duplikat API"));
 		exchange.getIn().setBody(details);
 	}
 
