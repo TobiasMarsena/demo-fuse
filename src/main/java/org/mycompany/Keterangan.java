@@ -1,12 +1,8 @@
 package org.mycompany;
 
-//@Entity
 public class Keterangan {
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long nip;
-	
 	private String keterangan;
 
 	public Keterangan(long id, String keterangan) {
@@ -24,5 +20,10 @@ public class Keterangan {
 	}
 	public void setKeterangan(String keterangan) {
 		this.keterangan = keterangan;
+	}
+	@Override
+	public String toString() {
+		return "Keterangan [nip=" + nip + ", keterangan=" + keterangan + "]";
 	}	
+	
 }

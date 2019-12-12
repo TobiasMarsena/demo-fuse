@@ -42,14 +42,7 @@
         </dataFormats>
         <restConfiguration bindingMode="json" component="restlet"
             contextPath="/" port="8080" scheme="http"/>
-        <!-- Home route -->
         <rest id="rest-9444b21a-fb2a-4281-a465-e3a91973832c">
-            <get id="c3431907-5d7c-41f5-9d34-530ae6746fd8" uri="/mysql/psql">
-                <to uri="direct:mysqlToPsql"/>
-            </get>
-            <get id="ecb00680-5c54-462a-853d-9230186b4030" uri="/mysql/api">
-                <to uri="direct:mysqlToApi"/>
-            </get>
             <get id="80217ffe-8beb-4856-bf32-6e6a8eb4ac46" uri="/api/detail">
                 <to uri="direct:getDetail"/>
             </get>
@@ -62,27 +55,16 @@
             <get id="d130ce26-b684-44ee-b956-90e079e7b61c" uri="/api/deleteAllCache">
                 <to uri="direct:clearCache"/>
             </get>
-            <get id="fcd856e4-3a5e-4056-b12a-0558699dc4da" uri="/welcome">
-                <to uri="direct:welcome"/>
-            </get>
             <get id="ad502389-05df-4369-9269-39d98298492b" uri="/api/customer/complete">
                 <to uri="direct:getCustomerAndDetail"/>
             </get>
-            <get id="37a05b7d-bc62-4ae7-bdbc-de4d93d26948" uri="/">
-                <to uri="direct:home"/>
+            <get id="c3431907-5d7c-41f5-9d34-530ae6746fd8" uri="/mysql/psql">
+                <to uri="direct:mysqlToPsql"/>
+            </get>
+            <get id="ecb00680-5c54-462a-853d-9230186b4030" uri="/mysql/api">
+                <to uri="direct:mysqlToApi"/>
             </get>
         </rest>
-        <!-- Home route -->
-        <route id="home-route">
-            <from id="_from7" uri="direct:home"/>
-            <to id="_to4" uri="mock:home"/>
-        </route>
-        <!-- Welcome route -->
-        <route id="_route3">
-            <from id="_from6" uri="direct:welcome"/>
-            <log id="_log5" message="Welcome. Redirecting to API to API Route . . ."/>
-            <to id="_to9" uri="direct:apiToApi"/>
-        </route>
         <!-- Master route -->
         <route id="getCustomerAndDetail">
             <from id="_from5" uri="direct:getCustomerAndDetail"/>
@@ -123,6 +105,27 @@
             <unmarshal id="_unmarshal1" ref="custFull"/>
             <log id="_log4" message="Success save to cache jboss data grid: ${body}"/>
         </route>
+        <!-- Get cache route -->
+        <route id="customer-cache-to-data">
+            <from id="_from3" uri="direct:customerDataFromCache"/>
+            <setHeader headerName="CamelInfinispanOperation" id="_setHeader4">
+                <constant>CamelInfinispanOperationGet</constant>
+            </setHeader>
+            <setHeader headerName="CamelInfinispanKey" id="_setHeader5">
+                <constant>CustomerComplete</constant>
+            </setHeader>
+            <to id="_to8" uri="infinispan://{{jdg.url}}"/>
+            <setBody id="setResultBody">
+                <simple>${header.CamelInfinispanOperationResult}</simple>
+            </setBody>
+            <choice id="_choice2">
+                <when id="_when2">
+                    <simple>${${header.CamelInfinispanOperationResult}} != null</simple>
+                    <convertBodyTo id="_convertBodyTo2" type="java.lang.String"/>
+                    <unmarshal id="_unmarshal4" ref="custFull"/>
+                </when>
+            </choice>
+        </route>
         <!-- Clear all cache in JDG - DANGEROUS -->
         <!--         <route id="clear-cache"> -->
         <!--             <from id="_from9" uri="direct:clearCache"/> -->
@@ -156,38 +159,11 @@
             <to id="_to6" uri="infinispan://{{jdg.url}}"/>
             <log id="_log10" message="Customer cache removed"/>
         </route>
-        <!-- Get cache route -->
-        <route id="customer-cache-to-data">
-            <from id="_from3" uri="direct:customerDataFromCache"/>
-            <setHeader headerName="CamelInfinispanOperation" id="_setHeader4">
-                <constant>CamelInfinispanOperationGet</constant>
-            </setHeader>
-            <setHeader headerName="CamelInfinispanKey" id="_setHeader5">
-                <constant>CustomerComplete</constant>
-            </setHeader>
-            <to id="_to8" uri="infinispan://{{jdg.url}}"/>
-            <setBody id="setResultBody">
-                <simple>${header.CamelInfinispanOperationResult}</simple>
-            </setBody>
-            <choice id="_choice2">
-                <when id="_when2">
-                    <simple>${${header.CamelInfinispanOperationResult}} != null</simple>
-                    <convertBodyTo id="_convertBodyTo2" type="java.lang.String"/>
-                    <unmarshal id="_unmarshal4" ref="custFull"/>
-                </when>
-            </choice>
-        </route>
         <!-- Access MySQL Database periodically -->
         <route id="access-mysql">
             <from id="_from1" uri="timer:mysqlSelect?period=5s&amp;repeatCount=3"/>
             <to id="_to11" uri="sql:SELECT * FROM Pegawai?dataSource=#jdbc-mysql"/>
             <log id="_log6" message="From MySQL: ${body}"/>
-        </route>
-        <!-- Access PostgreSQL Database periodically -->
-        <route id="access-psql">
-            <from id="_from12" uri="timer:psqlSelect?period=5s&amp;repeatCount=3"/>
-            <to id="_to19" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-psql"/>
-            <log id="_log9" message="From PostgreSQL: ${body}"/>
         </route>
         <!-- MYSQL Scenario -->
         <route id="mysql-scenario">
@@ -200,6 +176,12 @@
                 <simple>${body}</simple>
             </setHeader>
             <to id="_to15" uri="direct:aggregateHeaders"/>
+        </route>
+        <!-- Access PostgreSQL Database periodically -->
+        <route id="access-psql">
+            <from id="_from12" uri="timer:psqlSelect?period=5s&amp;repeatCount=3"/>
+            <to id="_to19" uri="sql:SELECT * FROM Keterangan?dataSource=#jdbc-psql"/>
+            <log id="_log9" message="From PostgreSQL: ${body}"/>
         </route>
         <!-- PostgreSQL Scenario -->
         <route id="psql-scenario">

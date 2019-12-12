@@ -1,5 +1,4 @@
 package org.mycompany;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,6 @@ public class CustomerAggregator implements AggregationStrategy {
 		
 		return newExchange;
 	}
-	
 	public void processPegawai(Exchange exchange) {
 		List<Map<String, Object>> rows = exchange.getIn().getBody(List.class);
 		List<Pegawai> pegawaiList = new ArrayList<>();
@@ -37,7 +35,6 @@ public class CustomerAggregator implements AggregationStrategy {
 		}
 		exchange.getIn().setHeader("customer", pegawaiList);
 	}
-	
 	public void processKeterangan(Exchange exchange) {
 		List<Map<String, Object>> rows = exchange.getIn().getBody(List.class);
 		List<Keterangan> keteranganList = new ArrayList<>();
@@ -48,7 +45,6 @@ public class CustomerAggregator implements AggregationStrategy {
 		}
 		exchange.getIn().setHeader("detail", keteranganList);
 	}
-	
 	public void createFullBody(Exchange exchange) {
 		Message inbound = exchange.getIn();
 		List<Pegawai> customers = (List<Pegawai>) inbound.getHeader("customer");
@@ -61,7 +57,12 @@ public class CustomerAggregator implements AggregationStrategy {
 		for (Pegawai customer : customers) {
 			long key = customer.getNip();
 			if (detailMap.containsKey(key)) {
-				aggregatedCustomer.add(new CustomerFull(customer, detailMap.get(key)));
+				while (detailMap.containsKey(key) ) {
+					aggregatedCustomer.add(new CustomerFull(customer, detailMap.get(key)));
+					detailMap.remove(key);
+					logger.info("detailMap contain key: " + key);
+					logger.info("detailMap object value: " + detailMap.get(key).toString());
+				}
 			} else {
 				aggregatedCustomer.add(new CustomerFull(customer));
 			}

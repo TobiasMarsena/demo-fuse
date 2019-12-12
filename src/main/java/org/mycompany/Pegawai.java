@@ -1,10 +1,7 @@
 package org.mycompany;
 
-//@Entity
 public class Pegawai {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected long nip;
 	protected String name;
 	protected String email;
@@ -33,6 +30,10 @@ public class Pegawai {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	@Override
+	public String toString() {
+		return "Pegawai [nip=" + nip + ", name=" + name + ", email=" + email + "]";
 	}
 	
 }
